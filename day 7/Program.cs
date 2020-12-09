@@ -34,14 +34,14 @@ namespace day_7
             {
                 FindParentBags(bagList, canHoldMyBag, bagMatch);
             }
-            Console.WriteLine($@"{canHoldMyBag.Count()} bag combinations can hold my {myBagDescription} bag!");
+            Console.WriteLine($@"{canHoldMyBag.Count()} bag combinations can hold your {myBagDescription} bag!");
 
 
             // see how many bags mine has to hold
             var myBag = bagList.Where(b => b.Description == myBagDescription).FirstOrDefault();
             var totalChildBags = 0;
             FindChildBags(bagList, myBag, 1, ref totalChildBags);
-            Console.WriteLine($@"My {myBagDescription} bag must contain {totalChildBags} bags!");
+            Console.WriteLine($@"Your {myBagDescription} bag must contain {totalChildBags} bags!");
 
 
             Console.ReadLine();
@@ -50,11 +50,17 @@ namespace day_7
         static void FindParentBags(in List<Bag> bagList, List<Bag> canHoldMyBag, Bag bagMatch)
         {
             var otherBags = bagList.Where(b => b.Children.Where(c => c.Description == bagMatch.Description).Any()).ToList();
-            
-            foreach (var bag in otherBags)
+            if (otherBags.Count == 0)
             {
                 if (!canHoldMyBag.Contains(bagMatch)) { canHoldMyBag.Add(bagMatch); }
-                FindParentBags(bagList, canHoldMyBag, bag);
+            }
+            else
+            {
+                foreach (var bag in otherBags)
+                {
+                    if (!canHoldMyBag.Contains(bagMatch)) { canHoldMyBag.Add(bagMatch); }
+                    FindParentBags(bagList, canHoldMyBag, bag);
+                }
             }
         }
 
